@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Slot Profissional Las Vegas – Login</title>
+  <style>
+    /* ================================
+       ESTILOS GLOBAIS E RESET
+    =================================== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle, #0f0f0f, #000);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    /* ================================
+       ESTILO DOS CONTAINERS GERAIS
+    =================================== */
+    .main-container {
+      width: 900px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.9);
+      overflow: hidden;
+    }
+    /* ---------------------------
+       Tela de Login/Registro
+    ---------------------------- */
+    #authContainer {
+      background: linear-gradient(145deg, #333, #111);
+      padding: 30px;
+      border: 3px solid #ffdf00;
+      text-align: center;
+    }
+    #authContainer h1 {
+      margin-bottom: 20px;
+      font-size: 2.8em;
+      color: #ffdf00;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+    .auth-form {
+      max-width: 350px;
+      margin: 0 auto 15px auto;
+      text-align: left;
+    }
+    .auth-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1.1em;
+    }
+    .auth-form input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 2px solid #ffdf00;
+      border-radius: 5px;
+      background: #222;
+      color: #ffdf00;
+      font-size: 1em;
+    }
+    .auth-form button {
+      width: 100%;
+      padding: 10px;
+      font-size: 1.1em;
+      background: #ff5722;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+      box-shadow: 0 0 10px rgba(255,0,0,0.7);
+    }
+    .auth-form button:hover {
+      background: #e64a19;
+    }
+    .auth-toggle {
+      margin-top: 10px;
+      font-size: 0.95em;
+      color: #ffdf00;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    /* ---------------------------
+       Tela do Slot
+    ---------------------------- */
+    #slotContainer {
+      display: none;
+      background: linear-gradient(145deg, #222, #111);
+      padding: 20px 30px;
+      border: 3px solid #ffdf00;
+      border-radius: 15px;
+    }
+    #slotContainer h1 {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 2.8em;
+      color: #ffdf00;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+    .credits {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      text-align: center;
+      text-shadow: 1px 1px 2px #000;
+    }
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .controls label {
+      font-size: 1.2em;
+      margin-right: 10px;
+    }
+    .controls input {
+      width: 80px;
+      font-size: 1.2em;
+      padding: 5px;
+      border-radius: 5px;
+      border: 2px solid #ffdf00;
+      text-align: center;
+      background: #222;
+      color: #ffdf00;
+    }
+    .controls button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      background: #ff5722;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-left: 10px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    }
+    .controls button:hover:not(:disabled) {
+      background: #e64a19;
+    }
+    .controls button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    .result {
+      font-size: 1.6em;
+      margin-top: 15px;
+      text-align: center;
+      min-height: 40px;
+      color: #ffdf00;
+      text-shadow: 1px 1px 3px #000;
+    }
+    .logout-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #ff5722;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 12px;
+      font-size: 1em;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .logout-btn:hover {
+      background: #e64a19;
+    }
+    /* ---------------------------
+       Grade do Slot – 6 colunas x 4 linhas
+    ---------------------------- */
+    .slot-grid {
+      position: relative;
+      width: 600px;
+      height: 320px;
+      background: #222;
+      margin: 0 auto 20px auto;
+      border: 5px solid #444;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+    }
+    .column {
+      float: left;
+      width: calc(100% / 6);
+      height: 100%;
+      position: relative;
+      padding: 2px;
+    }
+    .cell {
+      width: 100%;
+      height: 80px;
+      line-height: 80px;
+      text-align: center;
+      font-size: 2.5em;
+      background: #e0e0e0;
+      color: #333;
+      border-radius: 8px;
+      margin-bottom: 2px;
+      position: relative;
+      transition: transform 0.2s;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    /* Efeito de giro nas divisórias das células */
+    .cell::before {
+      content: "";
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      border: 2px solid #ffdf00;
+      border-radius: 10px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .cell.spin::before {
+      opacity: 1;
+      animation: rotateBorder 0.5s linear infinite;
+    }
+    @keyframes rotateBorder {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    /* Animação de Spin (deslize de cima para baixo) */
+    @keyframes spinDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .spin {
+      animation: spinDown 0.2s ease-in-out;
+    }
+    /* Animação de Explosão */
+    @keyframes explode {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+    .explode {
+      animation: explode 0.5s forwards;
+    }
+    /* Animação de Queda (Cascata) */
+    @keyframes fall {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .fall {
+      animation: fall 0.5s ease-out;
+    }
+    /* SVG para as Linhas de Ligação – inserido dentro do grid */
+    #linkLines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+    /* Clearfix para as colunas */
+    .clearfix::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  </style>
+</head>
+<body>
+  <!-- TELA DE LOGIN/REGISTRO -->
+  <div id="authContainer" class="main-container">
+    <h1>Bem‑Vindo ao Slot Las Vegas</h1>
+    <!-- Formulário de Login -->
+    <div id="loginForm" class="auth-form">
+      <label for="loginUsername">Usuário:</label>
+      <input type="text" id="loginUsername" placeholder="Digite seu usuário">
+      <label for="loginPassword">Senha:</label>
+      <input type="password" id="loginPassword" placeholder="Digite sua senha">
+      <button onclick="loginUser()">Entrar</button>
+      <div class="auth-toggle" onclick="showRegister()">Ainda não tem conta? Cadastre‑se</div>
+    </div>
+    <!-- Formulário de Registro (inicialmente oculto) -->
+    <div id="registerForm" class="auth-form" style="display:none;">
+      <label for="regUsername">Usuário:</label>
+      <input type="text" id="regUsername" placeholder="Escolha um usuário">
+      <label for="regPassword">Senha:</label>
+      <input type="password" id="regPassword" placeholder="Escolha uma senha">
+      <label for="regPasswordConfirm">Confirme a Senha:</label>
+      <input type="password" id="regPasswordConfirm" placeholder="Confirme a senha">
+      <button onclick="registerUser()">Cadastrar</button>
+      <div class="auth-toggle" onclick="showLogin()">Já tem conta? Faça o login</div>
+    </div>
+  </div>
+
+  <!-- TELA DO SLOT (inicialmente oculta) -->
+  <div id="slotContainer" class="main-container" style="display:none; position:relative;">
+    <button class="logout-btn" onclick="logoutUser()">Logout</button>
+    <h1>Slot Profissional Las Vegas</h1>
+    <div class="credits">Créditos: <span id="credits">1000</span></div>
+    <div class="controls">
+      <label for="bet">Valor da Aposta:</label>
+      <input type="number" id="bet" value="50" min="1">
+      <button id="spinButton" onclick="spin()">GIRAR</button>
+    </div>
+    <!-- Grade do slot com SVG overlay para as linhas de ligação -->
+    <div id="gridContainer" class="slot-grid clearfix">
+      <svg id="linkLines"></svg>
+    </div>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    /***********************
+     * SISTEMA DE AUTENTICAÇÃO
+     ***********************/
+    // Exibe o formulário de login e oculta o de registro
+    function showLogin() {
+      document.getElementById("loginForm").style.display = "block";
+      document.getElementById("registerForm").style.display = "none";
+    }
+    // Exibe o formulário de registro e oculta o de login
+    function showRegister() {
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("registerForm").style.display = "block";
+    }
+    // Registra um novo usuário e armazena em localStorage
+    function registerUser() {
+      const username = document.getElementById("regUsername").value.trim();
+      const password = document.getElementById("regPassword").value;
+      const passwordConfirm = document.getElementById("regPasswordConfirm").value;
+      if (!username || !password) {
+        alert("Preencha todos os campos.");
+        return;
+      }
+      if (password !== passwordConfirm) {
+        alert("As senhas não conferem!");
+        return;
+      }
+      let users = JSON.parse(localStorage.getItem("slotUsers") || "{}");
+      if (users[username]) {
+        alert("Usuário já existe. Tente outro nome.");
+        return;
+      }
+      users[username] = password;
+      localStorage.setItem("slotUsers", JSON.stringify(users));
+      alert("Cadastro realizado com sucesso! Faça login.");
+      showLogin();
+    }
+    // Realiza o login comparando os dados com os armazenados
+    function loginUser() {
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      if (!username || !password) {
+        alert("Preencha todos os campos.");
+        return;
+      }
+      let users = JSON.parse(localStorage.getItem("slotUsers") || "{}");
+      if (!users[username]) {
+        alert("Usuário não encontrado. Cadastre‑se.");
+        return;
+      }
+      if (users[username] !== password) {
+        alert("Senha incorreta!");
+        return;
+      }
+      // Login realizado com sucesso
+      sessionStorage.setItem("currentUser", username);
+      // Exibe o slot e oculta a tela de autenticação
+      document.getElementById("authContainer").style.display = "none";
+      document.getElementById("slotContainer").style.display = "block";
+    }
+    // Efetua logout removendo o usuário atual da sessão
+    function logoutUser() {
+      sessionStorage.removeItem("currentUser");
+      document.getElementById("slotContainer").style.display = "none";
+      document.getElementById("authContainer").style.display = "block";
+      // Limpa os campos de login
+      document.getElementById("loginUsername").value = "";
+      document.getElementById("loginPassword").value = "";
+    }
+    // Se já houver um usuário logado (na sessão), exibe o slot imediatamente
+    if (sessionStorage.getItem("currentUser")) {
+      document.getElementById("authContainer").style.display = "none";
+      document.getElementById("slotContainer").style.display = "block";
+    }
+
+    /***********************
+     * CÓDIGO DO SLOT – FUNCIONALIDADES AVANÇADAS
+     ***********************/
+    const columnsCount = 6;
+    const rowsCount = 4;
+    let credits = 1000;
+    let currentBet = 50;
+    let gridState = [];      // Array de 6 colunas; cada coluna é um array de 4 símbolos
+    let spinIntervals = [];  // Armazena os setInterval de cada coluna
+    let cascadeCount = 1;    // Conta quantas explosões (cascatas) ocorreram na rodada
+    let totalWin = 0;        // Acumula os ganhos da rodada (incluindo cascatas)
+
+    // Símbolos ponderados (os “bons” aparecem com menor frequência)
+    const weightedSymbols = [
+      { symbol: "🍒", weight: 40 },
+      { symbol: "🍋", weight: 40 },
+      { symbol: "🍊", weight: 40 },
+      { symbol: "🍉", weight: 30 },
+      { symbol: "🍇", weight: 30 },
+      { symbol: "⭐",  weight: 20 },
+      { symbol: "🐒", weight: 10 }
+    ];
+    const wild = "🐒";
+    function randomSymbol() {
+      const totalWeight = weightedSymbols.reduce((sum, item) => sum + item.weight, 0);
+      let rand = Math.random() * totalWeight;
+      for (let i = 0; i < weightedSymbols.length; i++) {
+        rand -= weightedSymbols[i].weight;
+        if (rand < 0) return weightedSymbols[i].symbol;
+      }
+      return weightedSymbols[weightedSymbols.length - 1].symbol;
+    }
+    // Paytable (para combinações de 4, 5 ou 6 símbolos consecutivos)
+    const paytable = {
+      "🍒": {4: 2, 5: 4, 6: 8},
+      "🍋": {4: 2, 5: 4, 6: 8},
+      "🍊": {4: 2, 5: 4, 6: 8},
+      "🍉": {4: 2, 5: 4, 6: 8},
+      "🍇": {4: 2, 5: 4, 6: 8},
+      "⭐":  {4: 3, 5: 6, 6: 12},
+      "🐒": {4: 5, 5: 10, 6: 20}
+    };
+    // Definição das paylines – cada linha é um array de índices (0 = topo, 3 = base)
+    const payLines = [
+      { name: "Linha Superior", rows: [0, 0, 0, 0, 0, 0] },
+      { name: "Linha 2",         rows: [1, 1, 1, 1, 1, 1] },
+      { name: "Linha 3",         rows: [2, 2, 2, 2, 2, 2] },
+      { name: "Linha Inferior",  rows: [3, 3, 3, 3, 3, 3] },
+      { name: "V",               rows: [0, 1, 2, 2, 1, 0] },
+      { name: "Inverso V",       rows: [3, 2, 1, 1, 2, 3] },
+      { name: "Zigzag Superior", rows: [0, 1, 0, 1, 0, 1] },
+      { name: "Zigzag Inferior", rows: [2, 3, 2, 3, 2, 3] },
+      { name: "W",               rows: [1, 0, 1, 2, 1, 0] },
+      { name: "M",               rows: [2, 3, 2, 1, 2, 3] }
+    ];
+    function updateCredits() {
+      document.getElementById("credits").innerText = credits;
+    }
+    function createGrid() {
+      const container = document.getElementById("gridContainer");
+      container.innerHTML = "";
+      container.innerHTML = '<svg id="linkLines"></svg>';
+      gridState = [];
+      for (let c = 0; c < columnsCount; c++) {
+        const colDiv = document.createElement("div");
+        colDiv.classList.add("column");
+        colDiv.dataset.col = c;
+        gridState[c] = [];
+        for (let r = 0; r < rowsCount; r++) {
+          const cellDiv = document.createElement("div");
+          cellDiv.classList.add("cell");
+          cellDiv.id = `cell-${c}-${r}`;
+          const sym = randomSymbol();
+          gridState[c].push(sym);
+          cellDiv.textContent = sym;
+          colDiv.appendChild(cellDiv);
+        }
+        container.appendChild(colDiv);
+      }
+    }
+    function renderColumn(colIndex, animationClass = "") {
+      for (let r = 0; r < rowsCount; r++) {
+        const cell = document.getElementById(`cell-${colIndex}-${r}`);
+        cell.textContent = gridState[colIndex][r];
+        if (animationClass) {
+          cell.classList.add(animationClass);
+          cell.classList.add("spin");
+          setTimeout(() => { 
+            cell.classList.remove(animationClass);
+            cell.classList.remove("spin");
+          }, 250);
+        }
+      }
+    }
+    function clearLinkLines() {
+      const svg = document.getElementById("linkLines");
+      if (svg) svg.innerHTML = "";
+    }
+    function drawLinkLine(cells) {
+      const containerRect = document.getElementById("gridContainer").getBoundingClientRect();
+      let points = "";
+      cells.forEach(({col, row}) => {
+        const cellElem = document.getElementById(`cell-${col}-${row}`);
+        const cellRect = cellElem.getBoundingClientRect();
+        const cx = cellRect.left + cellRect.width / 2 - containerRect.left;
+        const cy = cellRect.top + cellRect.height / 2 - containerRect.top;
+        points += `${cx},${cy} `;
+      });
+      const svg = document.getElementById("linkLines");
+      const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      polyline.setAttribute("points", points.trim());
+      polyline.setAttribute("stroke", "#ffdf00");
+      polyline.setAttribute("stroke-width", "4");
+      polyline.setAttribute("fill", "none");
+      polyline.style.opacity = 0;
+      svg.appendChild(polyline);
+      setTimeout(() => {
+        polyline.style.transition = "opacity 0.5s";
+        polyline.style.opacity = 1;
+      }, 50);
+      setTimeout(() => { polyline.style.opacity = 0; }, 2000);
+    }
+    function startSpin() {
+      spinIntervals = [];
+      for (let c = 0; c < columnsCount; c++) {
+        spinIntervals[c] = setInterval(() => {
+          for (let r = 0; r < rowsCount; r++) {
+            gridState[c][r] = randomSymbol();
+          }
+          renderColumn(c, "spin");
+        }, 100);
+      }
+    }
+    function stopSpin() {
+      for (let c = 0; c < columnsCount; c++) {
+        clearInterval(spinIntervals[c]);
+      }
+    }
+    function spin() {
+      currentBet = parseInt(document.getElementById("bet").value);
+      if (currentBet > credits || currentBet <= 0) {
+        alert("Valor de aposta inválido ou créditos insuficientes!");
+        return;
+      }
+      totalWin = 0;
+      cascadeCount = 1;
+      clearLinkLines();
+      document.getElementById("result").textContent = "";
+      document.getElementById("spinButton").disabled = true;
+      document.getElementById("bet").disabled = true;
+      credits -= currentBet;
+      updateCredits();
+      startSpin();
+      for (let c = 0; c < columnsCount; c++) {
+        setTimeout(() => {
+          clearInterval(spinIntervals[c]);
+          renderColumn(c);
+          if (c === columnsCount - 1) {
+            setTimeout(evaluateAllPaylines, 300);
+          }
+        }, 1000 + c * 200);
+      }
+    }
+    function evaluatePaylines() {
+      let wins = [];
+      payLines.forEach(line => {
+        let count = 0;
+        let effectiveSymbol = null;
+        let winningCells = [];
+        for (let c = 0; c < columnsCount; c++) {
+          const r = line.rows[c];
+          const sym = gridState[c][r];
+          if (c === 0) {
+            effectiveSymbol = (sym !== wild) ? sym : null;
+            count = 1;
+            winningCells.push({ col: c, row: r });
+          } else {
+            if (effectiveSymbol === null) {
+              if (sym === wild) {
+                count++;
+                winningCells.push({ col: c, row: r });
+              } else {
+                effectiveSymbol = sym;
+                count++;
+                winningCells.push({ col: c, row: r });
+              }
+            } else {
+              if (sym === effectiveSymbol || sym === wild) {
+                count++;
+                winningCells.push({ col: c, row: r });
+              } else {
+                break;
+              }
+            }
+          }
+        }
+        if (count >= 4) {
+          if (effectiveSymbol === null) effectiveSymbol = wild;
+          wins.push({ line: line.name, count, symbol: effectiveSymbol, cells: winningCells });
+        }
+      });
+      return wins;
+    }
+    function processWins() {
+      const wins = evaluatePaylines();
+      if (wins.length === 0) {
+        document.getElementById("result").textContent = "Sem vitória nesta rodada.";
+        credits += totalWin;
+        updateCredits();
+        document.getElementById("spinButton").disabled = false;
+        document.getElementById("bet").disabled = false;
+        return;
+      }
+      wins.forEach(win => {
+        drawLinkLine(win.cells);
+        const baseMultiplier = paytable[win.symbol][win.count] || 0;
+        const explosionMultiplier = Math.pow(2, cascadeCount);
+        const winAmount = currentBet * baseMultiplier * explosionMultiplier;
+        totalWin += winAmount;
+        console.log(`Payline ${win.line}: ${win.count} símbolos de ${win.symbol} → ${winAmount} créditos (x${explosionMultiplier})`);
+        win.cells.forEach(({ col, row }) => {
+          const cell = document.getElementById(`cell-${col}-${row}`);
+          cell.classList.add("explode");
+          setTimeout(() => cell.classList.remove("explode"), 600);
+        });
+      });
+      cascadeCount++;
+      setTimeout(() => {
+        cascadeUpdate(wins);
+      }, 800);
+    }
+    function cascadeUpdate(wins) {
+      let columnsToUpdate = new Set();
+      wins.forEach(win => {
+        win.cells.forEach(({ col, row }) => {
+          columnsToUpdate.add(col);
+          gridState[col][row] = null;
+        });
+      });
+      columnsToUpdate.forEach(col => {
+        let newCol = gridState[col].filter(sym => sym !== null);
+        const missing = rowsCount - newCol.length;
+        for (let i = 0; i < missing; i++) {
+          newCol.unshift(randomSymbol());
+        }
+        gridState[col] = newCol;
+        renderColumn(col, "fall");
+      });
+      clearLinkLines();
+      setTimeout(() => {
+        const cascadeWins = evaluatePaylines();
+        if (cascadeWins.length > 0) {
+          processWins();
+        } else {
+          credits += totalWin;
+          updateCredits();
+          document.getElementById("result").textContent = `Vitória total: ${totalWin} créditos!`;
+          document.getElementById("spinButton").disabled = false;
+          document.getElementById("bet").disabled = false;
+        }
+      }, 800);
+    }
+    function evaluateAllPaylines() {
+      processWins();
+    }
+    createGrid();
+    updateCredits();
+  </script>
+</body>
+</html>
