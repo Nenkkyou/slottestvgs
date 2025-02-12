@@ -2,44 +2,100 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Slot Profissional Las Vegas – Login</title>
+  <title>Slot Profissional Las Vegas - Ultimate Edition</title>
   <style>
-    /* ================================
-       ESTILOS GLOBAIS E RESET
-    =================================== */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ============================================================
+       RESET & CONFIGURAÇÕES GLOBAIS
+    ============================================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
     body {
       background: radial-gradient(circle, #0f0f0f, #000);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+      overflow: hidden;
     }
-    /* ================================
-       ESTILO DOS CONTAINERS GERAIS
-    =================================== */
+    /* ============================================================
+       CANVAS DE PARTICULAS (OPCIONAL, PARA FUNDO DINÂMICO)
+    ============================================================ */
+    #particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -10;
+    }
+    /* ============================================================
+       CONTAINER GERAL PARA TELAS (Centralizado)
+    ============================================================ */
     .main-container {
       width: 900px;
       border-radius: 15px;
       box-shadow: 0 0 30px rgba(0,0,0,0.9);
       overflow: hidden;
+      background: linear-gradient(145deg, #222, #111);
     }
-    /* ---------------------------
-       Tela de Login/Registro
-    ---------------------------- */
+    /* ============================================================
+       TELA DE SPLASH
+    ============================================================ */
+    #splashScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, #111, #000);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      text-align: center;
+      cursor: default;
+    }
+    #splashScreen h1 {
+      font-size: 4em;
+      color: #ffdf00;
+      text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeIn 2s forwards;
+    }
+    #splashScreen p {
+      font-size: 1.5em;
+      color: #fff;
+      opacity: 0;
+      animation: fadeIn 2s forwards;
+      animation-delay: 1s;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    /* ============================================================
+       TELA DE AUTENTICAÇÃO (LOGIN/REGISTRO)
+       (Centralizada vertical e horizontalmente)
+    ============================================================ */
     #authContainer {
-      background: linear-gradient(145deg, #333, #111);
       padding: 30px;
       border: 3px solid #ffdf00;
+      background: linear-gradient(145deg, #333, #111);
       text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
     }
     #authContainer h1 {
-      margin-bottom: 20px;
       font-size: 2.8em;
       color: #ffdf00;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      margin-bottom: 20px;
     }
     .auth-form {
       max-width: 350px;
@@ -83,27 +139,31 @@
       cursor: pointer;
       text-decoration: underline;
     }
-    /* ---------------------------
-       Tela do Slot
-    ---------------------------- */
+    /* ============================================================
+       TELA DO SLOT
+       (Centralizada vertical e horizontalmente)
+    ============================================================ */
     #slotContainer {
-      display: none;
-      background: linear-gradient(145deg, #222, #111);
       padding: 20px 30px;
       border: 3px solid #ffdf00;
-      border-radius: 15px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      background: radial-gradient(circle, #1a1a1a, #000);
     }
     #slotContainer h1 {
       text-align: center;
-      margin-bottom: 15px;
       font-size: 2.8em;
       color: #ffdf00;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      margin-bottom: 15px;
     }
     .credits {
       font-size: 1.5em;
-      margin-bottom: 10px;
       text-align: center;
+      margin-bottom: 10px;
       text-shadow: 1px 1px 2px #000;
     }
     .controls {
@@ -133,8 +193,8 @@
       color: #fff;
       cursor: pointer;
       transition: background 0.3s;
-      margin-left: 10px;
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+      margin: 5px;
+      box-shadow: 0 0 10px rgba(255,0,0,0.7);
     }
     .controls button:hover:not(:disabled) {
       background: #e64a19;
@@ -145,8 +205,8 @@
     }
     .result {
       font-size: 1.6em;
-      margin-top: 15px;
       text-align: center;
+      margin-top: 15px;
       min-height: 40px;
       color: #ffdf00;
       text-shadow: 1px 1px 3px #000;
@@ -167,19 +227,57 @@
     .logout-btn:hover {
       background: #e64a19;
     }
-    /* ---------------------------
-       Grade do Slot – 6 colunas x 4 linhas
-    ---------------------------- */
+    /* ============================================================
+       BOTÕES EXTRAS PARA CONTROLE DE APOSTA E AÇÕES
+    ============================================================ */
+    .bet-control {
+      display: inline-block;
+      margin: 0 5px;
+      font-size: 1.2em;
+      background: #ff5722;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255,0,0,0.7);
+      transition: background 0.3s;
+    }
+    .bet-control:hover {
+      background: #e64a19;
+    }
+    .action-btn {
+      font-size: 1.1em;
+      padding: 10px 15px;
+      background: #00bcd4;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,188,212,0.7);
+      transition: background 0.3s;
+      margin: 5px;
+    }
+    .action-btn:hover {
+      background: #0097a7;
+    }
+    /* ============================================================
+       GRADE DO SLOT – 6 COLUNAS x 4 LINHAS
+       Inspirada em slots premium da PG
+    ============================================================ */
     .slot-grid {
       position: relative;
       width: 600px;
       height: 320px;
-      background: #222;
+      background: radial-gradient(circle, #111, #222);
       margin: 0 auto 20px auto;
-      border: 5px solid #444;
+      border: 5px solid #d4af37; /* Dourado */
       border-radius: 10px;
       overflow: hidden;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 20px rgba(212,175,55,0.8);
+      background-image: linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.05) 75%, transparent 75%, transparent);
+      background-size: 40px 40px;
     }
     .column {
       float: left;
@@ -193,17 +291,16 @@
       height: 80px;
       line-height: 80px;
       text-align: center;
-      font-size: 2.5em;
+      font-size: 2.8em;
       background: #e0e0e0;
       color: #333;
       border-radius: 8px;
       margin-bottom: 2px;
       position: relative;
       transition: transform 0.2s;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.5);
       overflow: hidden;
     }
-    /* Efeito de giro nas divisórias das células */
     .cell::before {
       content: "";
       position: absolute;
@@ -211,7 +308,7 @@
       left: -4px;
       right: -4px;
       bottom: -4px;
-      border: 2px solid #ffdf00;
+      border: 2px solid #d4af37;
       border-radius: 10px;
       opacity: 0;
       transition: opacity 0.2s;
@@ -224,7 +321,6 @@
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
-    /* Animação de Spin (deslize de cima para baixo) */
     @keyframes spinDown {
       from { transform: translateY(-100%); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
@@ -232,7 +328,6 @@
     .spin {
       animation: spinDown 0.2s ease-in-out;
     }
-    /* Animação de Explosão */
     @keyframes explode {
       0% { transform: scale(1); opacity: 1; }
       100% { transform: scale(2); opacity: 0; }
@@ -240,7 +335,6 @@
     .explode {
       animation: explode 0.5s forwards;
     }
-    /* Animação de Queda (Cascata) */
     @keyframes fall {
       from { transform: translateY(-50px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
@@ -248,7 +342,6 @@
     .fall {
       animation: fall 0.5s ease-out;
     }
-    /* SVG para as Linhas de Ligação – inserido dentro do grid */
     #linkLines {
       position: absolute;
       top: 0;
@@ -258,7 +351,6 @@
       pointer-events: none;
       z-index: 10;
     }
-    /* Clearfix para as colunas */
     .clearfix::after {
       content: "";
       display: table;
@@ -267,10 +359,18 @@
   </style>
 </head>
 <body>
-  <!-- TELA DE LOGIN/REGISTRO -->
+  <!-- CANVAS DE PARTICULAS -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- TELA DE SPLASH -->
+  <div id="splashScreen" class="main-container">
+    <h1>Slot Las Vegas</h1>
+    <p>Prepare-se para a experiência definitiva!</p>
+  </div>
+
+  <!-- TELA DE AUTENTICAÇÃO (LOGIN/REGISTRO) -->
   <div id="authContainer" class="main-container">
     <h1>Bem‑Vindo ao Slot Las Vegas</h1>
-    <!-- Formulário de Login -->
     <div id="loginForm" class="auth-form">
       <label for="loginUsername">Usuário:</label>
       <input type="text" id="loginUsername" placeholder="Digite seu usuário">
@@ -279,30 +379,34 @@
       <button onclick="loginUser()">Entrar</button>
       <div class="auth-toggle" onclick="showRegister()">Ainda não tem conta? Cadastre‑se</div>
     </div>
-    <!-- Formulário de Registro (inicialmente oculto) -->
-    <div id="registerForm" class="auth-form" style="display:none;">
+    <div id="registerForm" class="auth-form" style="display: none;">
       <label for="regUsername">Usuário:</label>
       <input type="text" id="regUsername" placeholder="Escolha um usuário">
       <label for="regPassword">Senha:</label>
       <input type="password" id="regPassword" placeholder="Escolha uma senha">
       <label for="regPasswordConfirm">Confirme a Senha:</label>
-      <input type="password" id="regPasswordConfirm" placeholder="Confirme a senha">
+      <input type="password" id="regPasswordConfirm" placeholder="Confirme sua senha">
       <button onclick="registerUser()">Cadastrar</button>
       <div class="auth-toggle" onclick="showLogin()">Já tem conta? Faça o login</div>
     </div>
   </div>
 
-  <!-- TELA DO SLOT (inicialmente oculta) -->
-  <div id="slotContainer" class="main-container" style="display:none; position:relative;">
+  <!-- TELA DO SLOT -->
+  <div id="slotContainer" class="main-container">
     <button class="logout-btn" onclick="logoutUser()">Logout</button>
     <h1>Slot Profissional Las Vegas</h1>
-    <div class="credits">Créditos: <span id="credits">1000</span></div>
+    <div class="credits">Créditos: <span id="creditsDisplay">1000</span></div>
     <div class="controls">
       <label for="bet">Valor da Aposta:</label>
+      <button class="bet-control" onclick="decreaseBet()">-</button>
       <input type="number" id="bet" value="50" min="1">
+      <button class="bet-control" onclick="increaseBet()">+</button>
       <button id="spinButton" onclick="spin()">GIRAR</button>
     </div>
-    <!-- Grade do slot com SVG overlay para as linhas de ligação -->
+    <div class="controls">
+      <button class="action-btn" onclick="rechargeCoins()">Recarregar Moedas</button>
+      <button class="action-btn" onclick="buyBonus()">Comprar Bônus</button>
+    </div>
     <div id="gridContainer" class="slot-grid clearfix">
       <svg id="linkLines"></svg>
     </div>
@@ -310,20 +414,68 @@
   </div>
 
   <script>
-    /***********************
-     * SISTEMA DE AUTENTICAÇÃO
-     ***********************/
-    // Exibe o formulário de login e oculta o de registro
+    /**************************************************
+     * SCRIPT DE PARTICULAS PARA FUNDO DINÂMICO (OPCIONAL)
+     **************************************************/
+    (function() {
+      const canvas = document.getElementById('particleCanvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      const particleCount = 100;
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+      function Particle() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+      }
+      Particle.prototype.update = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      Particle.prototype.draw = function() {
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      function initParticles() {
+        particles = [];
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+      }
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animateParticles);
+      }
+      initParticles();
+      animateParticles();
+    })();
+
+    /**************************************************
+     * SISTEMA DE AUTENTICAÇÃO (LOGIN/REGISTRO)
+     **************************************************/
     function showLogin() {
       document.getElementById("loginForm").style.display = "block";
       document.getElementById("registerForm").style.display = "none";
     }
-    // Exibe o formulário de registro e oculta o de login
     function showRegister() {
       document.getElementById("loginForm").style.display = "none";
       document.getElementById("registerForm").style.display = "block";
     }
-    // Registra um novo usuário e armazena em localStorage
     function registerUser() {
       const username = document.getElementById("regUsername").value.trim();
       const password = document.getElementById("regPassword").value;
@@ -346,7 +498,6 @@
       alert("Cadastro realizado com sucesso! Faça login.");
       showLogin();
     }
-    // Realiza o login comparando os dados com os armazenados
     function loginUser() {
       const username = document.getElementById("loginUsername").value.trim();
       const password = document.getElementById("loginPassword").value;
@@ -363,40 +514,41 @@
         alert("Senha incorreta!");
         return;
       }
-      // Login realizado com sucesso
       sessionStorage.setItem("currentUser", username);
-      // Exibe o slot e oculta a tela de autenticação
       document.getElementById("authContainer").style.display = "none";
       document.getElementById("slotContainer").style.display = "block";
     }
-    // Efetua logout removendo o usuário atual da sessão
     function logoutUser() {
       sessionStorage.removeItem("currentUser");
       document.getElementById("slotContainer").style.display = "none";
       document.getElementById("authContainer").style.display = "block";
-      // Limpa os campos de login
       document.getElementById("loginUsername").value = "";
       document.getElementById("loginPassword").value = "";
     }
-    // Se já houver um usuário logado (na sessão), exibe o slot imediatamente
     if (sessionStorage.getItem("currentUser")) {
       document.getElementById("authContainer").style.display = "none";
       document.getElementById("slotContainer").style.display = "block";
     }
 
-    /***********************
-     * CÓDIGO DO SLOT – FUNCIONALIDADES AVANÇADAS
-     ***********************/
-    const columnsCount = 6;
-    const rowsCount = 4;
+    /**************************************************
+     * VARIÁVEIS GLOBAIS DO SLOT
+     **************************************************/
+    const COLS = 6, ROWS = 4;
     let credits = 1000;
     let currentBet = 50;
-    let gridState = [];      // Array de 6 colunas; cada coluna é um array de 4 símbolos
-    let spinIntervals = [];  // Armazena os setInterval de cada coluna
-    let cascadeCount = 1;    // Conta quantas explosões (cascatas) ocorreram na rodada
-    let totalWin = 0;        // Acumula os ganhos da rodada (incluindo cascatas)
+    let gridState = [];      // Array 2D: COLS x ROWS
+    let spinIntervals = [];  // Intervalos para cada coluna
+    let cascadeCount = 1;    // Número de cascatas (explosões) nesta rodada
+    let totalWin = 0;
+    // Variáveis do bônus (buy bonus / bonus round)
+    let bonusActive = false;         // Indica se há um bonus round ativo (free spins)
+    let bonusSpinsRemaining = 0;     // Número de giros grátis restantes
+    let bonusSpinMultiplier = 1;     // Multiplicador para os giros grátis
 
-    // Símbolos ponderados (os “bons” aparecem com menor frequência)
+    /**************************************************
+     * FUNÇÕES DO SLOT
+     **************************************************/
+    // Função para gerar um símbolo aleatório com base em pesos
     const weightedSymbols = [
       { symbol: "🍒", weight: 40 },
       { symbol: "🍋", weight: 40 },
@@ -416,7 +568,7 @@
       }
       return weightedSymbols[weightedSymbols.length - 1].symbol;
     }
-    // Paytable (para combinações de 4, 5 ou 6 símbolos consecutivos)
+    // Paytable: pagamentos para 4, 5 ou 6 símbolos consecutivos
     const paytable = {
       "🍒": {4: 2, 5: 4, 6: 8},
       "🍋": {4: 2, 5: 4, 6: 8},
@@ -426,33 +578,33 @@
       "⭐":  {4: 3, 5: 6, 6: 12},
       "🐒": {4: 5, 5: 10, 6: 20}
     };
-    // Definição das paylines – cada linha é um array de índices (0 = topo, 3 = base)
+    // Definição das paylines – cada array define a linha (índices de 0 a 3)
     const payLines = [
       { name: "Linha Superior", rows: [0, 0, 0, 0, 0, 0] },
-      { name: "Linha 2",         rows: [1, 1, 1, 1, 1, 1] },
-      { name: "Linha 3",         rows: [2, 2, 2, 2, 2, 2] },
-      { name: "Linha Inferior",  rows: [3, 3, 3, 3, 3, 3] },
-      { name: "V",               rows: [0, 1, 2, 2, 1, 0] },
-      { name: "Inverso V",       rows: [3, 2, 1, 1, 2, 3] },
+      { name: "Linha 2", rows: [1, 1, 1, 1, 1, 1] },
+      { name: "Linha 3", rows: [2, 2, 2, 2, 2, 2] },
+      { name: "Linha Inferior", rows: [3, 3, 3, 3, 3, 3] },
+      { name: "V", rows: [0, 1, 2, 2, 1, 0] },
+      { name: "Inverso V", rows: [3, 2, 1, 1, 2, 3] },
       { name: "Zigzag Superior", rows: [0, 1, 0, 1, 0, 1] },
       { name: "Zigzag Inferior", rows: [2, 3, 2, 3, 2, 3] },
-      { name: "W",               rows: [1, 0, 1, 2, 1, 0] },
-      { name: "M",               rows: [2, 3, 2, 1, 2, 3] }
+      { name: "W", rows: [1, 0, 1, 2, 1, 0] },
+      { name: "M", rows: [2, 3, 2, 1, 2, 3] }
     ];
     function updateCredits() {
-      document.getElementById("credits").innerText = credits;
+      document.getElementById("creditsDisplay").innerText = credits;
     }
     function createGrid() {
       const container = document.getElementById("gridContainer");
       container.innerHTML = "";
       container.innerHTML = '<svg id="linkLines"></svg>';
       gridState = [];
-      for (let c = 0; c < columnsCount; c++) {
+      for (let c = 0; c < COLS; c++) {
         const colDiv = document.createElement("div");
         colDiv.classList.add("column");
         colDiv.dataset.col = c;
         gridState[c] = [];
-        for (let r = 0; r < rowsCount; r++) {
+        for (let r = 0; r < ROWS; r++) {
           const cellDiv = document.createElement("div");
           cellDiv.classList.add("cell");
           cellDiv.id = `cell-${c}-${r}`;
@@ -465,13 +617,13 @@
       }
     }
     function renderColumn(colIndex, animationClass = "") {
-      for (let r = 0; r < rowsCount; r++) {
+      for (let r = 0; r < ROWS; r++) {
         const cell = document.getElementById(`cell-${colIndex}-${r}`);
         cell.textContent = gridState[colIndex][r];
         if (animationClass) {
           cell.classList.add(animationClass);
           cell.classList.add("spin");
-          setTimeout(() => { 
+          setTimeout(() => {
             cell.classList.remove(animationClass);
             cell.classList.remove("spin");
           }, 250);
@@ -508,9 +660,9 @@
     }
     function startSpin() {
       spinIntervals = [];
-      for (let c = 0; c < columnsCount; c++) {
+      for (let c = 0; c < COLS; c++) {
         spinIntervals[c] = setInterval(() => {
-          for (let r = 0; r < rowsCount; r++) {
+          for (let r = 0; r < ROWS; r++) {
             gridState[c][r] = randomSymbol();
           }
           renderColumn(c, "spin");
@@ -518,30 +670,53 @@
       }
     }
     function stopSpin() {
-      for (let c = 0; c < columnsCount; c++) {
+      for (let c = 0; c < COLS; c++) {
         clearInterval(spinIntervals[c]);
       }
     }
+    // Função principal de spin:
+    // Se um bonus round estiver ativo (free spins), ele é executado sem deduzir aposta.
     function spin() {
+      // Se estiver em bonus round (free spins), não deduz a aposta
+      if (bonusActive && bonusSpinsRemaining > 0) {
+        // Execução de giro grátis com bônus:
+        bonusRound = true;
+        bonusSpinsRemaining--;
+        // Se os giros grátis se esgotarem, desativa o bonus round
+        if (bonusSpinsRemaining === 0) {
+          bonusActive = false;
+          bonusSpinMultiplier = 1;
+          alert("Bonus round encerrado!");
+        }
+        executarSpin(false);  // false indica que não há dedução de aposta
+        return;
+      }
+      // Giro normal:
       currentBet = parseInt(document.getElementById("bet").value);
       if (currentBet > credits || currentBet <= 0) {
         alert("Valor de aposta inválido ou créditos insuficientes!");
         return;
       }
+      executarSpin(true);
+    }
+    // Função auxiliar que executa o spin; se deduct==true, deduz a aposta
+    function executarSpin(deduct) {
       totalWin = 0;
       cascadeCount = 1;
       clearLinkLines();
       document.getElementById("result").textContent = "";
       document.getElementById("spinButton").disabled = true;
       document.getElementById("bet").disabled = true;
-      credits -= currentBet;
-      updateCredits();
+      if (deduct) {
+        credits -= currentBet;
+        updateCredits();
+      }
       startSpin();
-      for (let c = 0; c < columnsCount; c++) {
+      for (let c = 0; c < COLS; c++) {
         setTimeout(() => {
           clearInterval(spinIntervals[c]);
           renderColumn(c);
-          if (c === columnsCount - 1) {
+          if (c === COLS - 1) {
             setTimeout(evaluateAllPaylines, 300);
           }
         }, 1000 + c * 200);
@@ -553,7 +728,7 @@
         let count = 0;
         let effectiveSymbol = null;
         let winningCells = [];
-        for (let c = 0; c < columnsCount; c++) {
+        for (let c = 0; c < COLS; c++) {
           const r = line.rows[c];
           const sym = gridState[c][r];
           if (c === 0) {
@@ -601,9 +776,11 @@
         drawLinkLine(win.cells);
         const baseMultiplier = paytable[win.symbol][win.count] || 0;
         const explosionMultiplier = Math.pow(2, cascadeCount);
-        const winAmount = currentBet * baseMultiplier * explosionMultiplier;
+        // Se estivermos em bonus round, utiliza o multiplicador do bônus (free spins)
+        const appliedMultiplier = explosionMultiplier * bonusSpinMultiplier;
+        const winAmount = currentBet * baseMultiplier * appliedMultiplier;
         totalWin += winAmount;
-        console.log(`Payline ${win.line}: ${win.count} símbolos de ${win.symbol} → ${winAmount} créditos (x${explosionMultiplier})`);
+        console.log(`Payline ${win.line}: ${win.count} símbolos de ${win.symbol} → ${winAmount} créditos (x${explosionMultiplier} * Bonus x${bonusSpinMultiplier})`);
         win.cells.forEach(({ col, row }) => {
           const cell = document.getElementById(`cell-${col}-${row}`);
           cell.classList.add("explode");
@@ -611,9 +788,7 @@
         });
       });
       cascadeCount++;
-      setTimeout(() => {
-        cascadeUpdate(wins);
-      }, 800);
+      setTimeout(() => { cascadeUpdate(wins); }, 800);
     }
     function cascadeUpdate(wins) {
       let columnsToUpdate = new Set();
@@ -625,7 +800,7 @@
       });
       columnsToUpdate.forEach(col => {
         let newCol = gridState[col].filter(sym => sym !== null);
-        const missing = rowsCount - newCol.length;
+        const missing = ROWS - newCol.length;
         for (let i = 0; i < missing; i++) {
           newCol.unshift(randomSymbol());
         }
@@ -649,8 +824,59 @@
     function evaluateAllPaylines() {
       processWins();
     }
+    // Inicializa o grid e os créditos
     createGrid();
     updateCredits();
+
+    /**************************************************
+     * CONTROLES EXTRAS: AUMENTAR/DIMINUIR APOSTA, 
+     * RECARRGAR MOEDAS, COMPRAR BÔNUS
+     **************************************************/
+    function increaseBet() {
+      let betInput = document.getElementById("bet");
+      betInput.value = parseInt(betInput.value) + 10;
+    }
+    function decreaseBet() {
+      let betInput = document.getElementById("bet");
+      if (parseInt(betInput.value) > 10) {
+        betInput.value = parseInt(betInput.value) - 10;
+      }
+    }
+    function rechargeCoins() {
+      // Adiciona 500 créditos
+      credits += 500;
+      updateCredits();
+      alert("Moedas recarregadas! (+500 créditos)");
+    }
+    function buyBonus() {
+      // Custo para comprar bônus
+      const bonusCost = 200;
+      if (credits < bonusCost) {
+        alert("Créditos insuficientes para comprar bônus!");
+        return;
+      }
+      credits -= bonusCost;
+      updateCredits();
+      // Ativa bonus round: 3 giros grátis com multiplicador 3x
+      bonusActive = true;
+      bonusSpinsRemaining = 3;
+      bonusSpinMultiplier = 3;
+      alert("Bônus comprado! Você ativou 3 giros grátis com multiplicador 3x.");
+    }
+
+    /**************************************************
+     * TRANSIÇÃO DA SPLASH SCREEN
+     * A splash desaparece automaticamente após 3 segundos
+     **************************************************/
+    setTimeout(hideSplash, 3000);
+    function hideSplash() {
+      document.getElementById("splashScreen").style.display = "none";
+      if (sessionStorage.getItem("currentUser")) {
+        document.getElementById("slotContainer").style.display = "block";
+      } else {
+        document.getElementById("authContainer").style.display = "block";
+      }
+    }
   </script>
 </body>
 </html>
