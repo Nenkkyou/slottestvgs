@@ -2,7 +2,9 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Slot Profissional Las Vegas - Ultimate Edition</title>
+  <title>Slot Profissional Las Vegas - Ultimate Edition 2.0</title>
+  <!-- Google Fonts para um visual mais moderno -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <style>
     /* ============================================================
        RESET & CONFIGURAÇÕES GLOBAIS
@@ -14,7 +16,7 @@
     }
     html, body {
       height: 100%;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Orbitron', sans-serif;
     }
     body {
       background: radial-gradient(circle, #0f0f0f, #000);
@@ -22,23 +24,25 @@
       overflow: hidden;
     }
     /* ============================================================
-       CANVAS DE PARTICULAS (OPCIONAL, PARA FUNDO DINÂMICO)
+       CANVAS DE PARTICULAS (Fundo Dinâmico)
     ============================================================ */
     #particleCanvas {
       position: fixed;
       top: 0;
       left: 0;
-      z-index: -10;
+      z-index: -20;
     }
     /* ============================================================
-       CONTAINER GERAL PARA TELAS (Centralizado)
+       CONTAINER GERAL – USADO NAS TELAS (Centralizado)
     ============================================================ */
     .main-container {
       width: 900px;
+      max-width: 95%;
+      margin: 0 auto;
       border-radius: 15px;
+      background: linear-gradient(145deg, #222, #111);
       box-shadow: 0 0 30px rgba(0,0,0,0.9);
       overflow: hidden;
-      background: linear-gradient(145deg, #222, #111);
     }
     /* ============================================================
        TELA DE SPLASH
@@ -57,28 +61,30 @@
       z-index: 100;
       text-align: center;
       cursor: default;
+      animation: fadeOutSplash 1s ease-out 3s forwards;
     }
     #splashScreen h1 {
       font-size: 4em;
       color: #ffdf00;
       text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
       margin-bottom: 20px;
-      opacity: 0;
       animation: fadeIn 2s forwards;
     }
     #splashScreen p {
       font-size: 1.5em;
       color: #fff;
-      opacity: 0;
       animation: fadeIn 2s forwards;
       animation-delay: 1s;
     }
     @keyframes fadeIn {
+      from { opacity: 0; }
       to { opacity: 1; }
     }
+    @keyframes fadeOutSplash {
+      to { opacity: 0; visibility: hidden; }
+    }
     /* ============================================================
-       TELA DE AUTENTICAÇÃO (LOGIN/REGISTRO)
-       (Centralizada vertical e horizontalmente)
+       TELA DE AUTENTICAÇÃO (LOGIN/REGISTRO) – CENTRALIZADA
     ============================================================ */
     #authContainer {
       padding: 30px;
@@ -140,8 +146,7 @@
       text-decoration: underline;
     }
     /* ============================================================
-       TELA DO SLOT
-       (Centralizada vertical e horizontalmente)
+       TELA DO SLOT – CENTRALIZADA
     ============================================================ */
     #slotContainer {
       padding: 20px 30px;
@@ -398,7 +403,7 @@
     <div class="credits">Créditos: <span id="creditsDisplay">1000</span></div>
     <div class="controls">
       <label for="bet">Valor da Aposta:</label>
-      <button class="bet-control" onclick="decreaseBet()">-</button>
+      <button class="bet-control" onclick="decreaseBet()">–</button>
       <input type="number" id="bet" value="50" min="1">
       <button class="bet-control" onclick="increaseBet()">+</button>
       <button id="spinButton" onclick="spin()">GIRAR</button>
@@ -415,7 +420,7 @@
 
   <script>
     /**************************************************
-     * SCRIPT DE PARTICULAS PARA FUNDO DINÂMICO (OPCIONAL)
+     * SCRIPT DE PARTICULAS PARA FUNDO DINÂMICO
      **************************************************/
     (function() {
       const canvas = document.getElementById('particleCanvas');
@@ -555,7 +560,7 @@
       { symbol: "🍊", weight: 40 },
       { symbol: "🍉", weight: 30 },
       { symbol: "🍇", weight: 30 },
-      { symbol: "⭐",  weight: 20 },
+      { symbol: "⭐", weight: 20 },
       { symbol: "🐒", weight: 10 }
     ];
     const wild = "🐒";
@@ -575,7 +580,7 @@
       "🍊": {4: 2, 5: 4, 6: 8},
       "🍉": {4: 2, 5: 4, 6: 8},
       "🍇": {4: 2, 5: 4, 6: 8},
-      "⭐":  {4: 3, 5: 6, 6: 12},
+      "⭐": {4: 3, 5: 6, 6: 12},
       "🐒": {4: 5, 5: 10, 6: 20}
     };
     // Definição das paylines – cada array define a linha (índices de 0 a 3)
@@ -623,7 +628,7 @@
         if (animationClass) {
           cell.classList.add(animationClass);
           cell.classList.add("spin");
-          setTimeout(() => {
+          setTimeout(() => { 
             cell.classList.remove(animationClass);
             cell.classList.remove("spin");
           }, 250);
@@ -675,23 +680,18 @@
       }
     }
     // Função principal de spin:
-    // Se um bonus round estiver ativo (free spins), ele é executado sem deduzir aposta.
+    // Se bonusActive for verdadeiro e houver free spins, executa um giro grátis
     function spin() {
-      // Se estiver em bonus round (free spins), não deduz a aposta
       if (bonusActive && bonusSpinsRemaining > 0) {
-        // Execução de giro grátis com bônus:
-        bonusRound = true;
         bonusSpinsRemaining--;
-        // Se os giros grátis se esgotarem, desativa o bonus round
         if (bonusSpinsRemaining === 0) {
           bonusActive = false;
           bonusSpinMultiplier = 1;
           alert("Bonus round encerrado!");
         }
-        executarSpin(false);  // false indica que não há dedução de aposta
+        executarSpin(false); // false => não deduz aposta
         return;
       }
-      // Giro normal:
       currentBet = parseInt(document.getElementById("bet").value);
       if (currentBet > credits || currentBet <= 0) {
         alert("Valor de aposta inválido ou créditos insuficientes!");
@@ -699,7 +699,7 @@
       }
       executarSpin(true);
     }
-    // Função auxiliar que executa o spin; se deduct==true, deduz a aposta
+    // Função auxiliar para executar o giro (dedução opcional da aposta)
     function executarSpin(deduct) {
       totalWin = 0;
       cascadeCount = 1;
@@ -776,7 +776,6 @@
         drawLinkLine(win.cells);
         const baseMultiplier = paytable[win.symbol][win.count] || 0;
         const explosionMultiplier = Math.pow(2, cascadeCount);
-        // Se estivermos em bonus round, utiliza o multiplicador do bônus (free spins)
         const appliedMultiplier = explosionMultiplier * bonusSpinMultiplier;
         const winAmount = currentBet * baseMultiplier * appliedMultiplier;
         totalWin += winAmount;
@@ -787,6 +786,7 @@
           setTimeout(() => cell.classList.remove("explode"), 600);
         });
       });
+      bonusPurchaseMultiplier = 1;
       cascadeCount++;
       setTimeout(() => { cascadeUpdate(wins); }, 800);
     }
@@ -824,7 +824,6 @@
     function evaluateAllPaylines() {
       processWins();
     }
-    // Inicializa o grid e os créditos
     createGrid();
     updateCredits();
 
@@ -843,13 +842,11 @@
       }
     }
     function rechargeCoins() {
-      // Adiciona 500 créditos
       credits += 500;
       updateCredits();
       alert("Moedas recarregadas! (+500 créditos)");
     }
     function buyBonus() {
-      // Custo para comprar bônus
       const bonusCost = 200;
       if (credits < bonusCost) {
         alert("Créditos insuficientes para comprar bônus!");
@@ -857,7 +854,6 @@
       }
       credits -= bonusCost;
       updateCredits();
-      // Ativa bonus round: 3 giros grátis com multiplicador 3x
       bonusActive = true;
       bonusSpinsRemaining = 3;
       bonusSpinMultiplier = 3;
